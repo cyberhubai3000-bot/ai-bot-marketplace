@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | AI Bot Marketplace</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background: #0a0a0f; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 500px; width: 100%; padding: 40px; }
+        .card { background: #12121a; border: 1px solid #333; border-radius: 16px; padding: 40px; }
+        h1 { text-align: center; margin-bottom: 30px; color: #00d4ff; }
+        .bot-info { background: #1a1a25; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .bot-name { font-size: 24px; font-weight: bold; }
+        .bot-price { font-size: 36px; color: #00d4ff; margin-top: 10px; }
+        .features { list-style: none; margin: 20px 0; }
+        .features li { padding: 8px 0; color: #ccc; }
+        #payment-form { margin-top: 30px; }
+        #card-element { background: #1a1a25; padding: 16px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px; }
+        #submit { width: 100%; padding: 16px; background: linear-gradient(135deg, #00d4ff, #a855f7); border: none; border-radius: 8px; color: white; font-size: 18px; cursor: pointer; }
+        #submit:hover { opacity: 0.9; }
+        .powered-by { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+        #error-message { color: #ef4444; margin-top: 10px; display: none; }
+        .loading { display: none; text-align: center; }
+        .spinner { border: 3px solid #333; border-top: 3px solid #00d4ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Complete Purchase</h1>
+            
+            <div class="bot-info">
+                <div class="bot-name" id="bot-name">Loading...</div>
+                <div class="bot-price" id="bot-price">$0</div>
+                <ul class="features" id="features">
+                    <li>Loading features...</li>
+                </ul>
+            </div>
+            
+            <form id="payment-form">
+                <div id="card-element"></div>
+                <div id="error-message"></div>
+                
+                <button type="submit" id="submit">Pay Now</button>
+            </form>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing payment...</p>
+            </div>
+            
+            <div class="powered-by">🔒 Secured by Stripe</div>
+        </div>
+    </div>
+    
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const botType = urlParams.get('type') || 'support';
+        
+        // Bot configurations
+        const bots = {
+            support: { name: 'Support Bot', price: '$29/mo', amount: 2900, features: ['24/7 Support', 'Auto-Reply', 'Ticket System'] },
+            marketing: { name: 'Marketing Bot', price: '$49/mo', amount: 4900, features: ['Lead Gen', 'Campaigns', 'Analytics'] },
+            sales: { name: 'Sales Bot', price: '$39/mo', amount: 3900, features: ['Product Recs', 'Checkout', 'Inventory'] }
+        };
+        
+        const bot = bots[botType] || bots.support;
+        
+        // Update display
+        document.getElementById('bot-name').textContent = bot.name;
+        document.getElementById('bot-price').textContent = bot.price;
+        document.getElementById('features').innerHTML = bot.features.map(f => `&lt;li>✓ ${f}</li>`).join('');
+        
+        // Stripe setup (TEST MODE)
+        const stripe = Stripe('pk_test_51PQRstSampleKeyForDemo');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card', { style: { base: { color: '#fff', '::placeholder': { color: '#666' } } } });
+        cardElement.mount('#card-element');
+        
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading
+            form.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Simulate payment processing (DEMO MODE)
+            setTimeout(() => {
+                // Generate order ID
+                const orderId = 'order_' + Date.now();
+                
+                // Store purchase in localStorage
+                localStorage.setItem('bot_purchase', JSON.stringify({
+                    botType: botType,
+                    orderId: orderId,
+                    timestamp: new Date().toISOString(),
+                    status: 'paid'
+                }));
+                
+                // Redirect to activation
+                window.location.href = `activate.html?type=${botType}&order=${orderId}&paid=true`;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
