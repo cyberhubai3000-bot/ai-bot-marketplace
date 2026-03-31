@@ -106,8 +106,8 @@
                     status: 'paid'
                 }));
                 
-                // Redirect to activation
-                window.location.href = `activate.html?type=${botType}&order=${orderId}&paid=true`;
+                // Redirect to success page (which will trigger Telegram notification)
+                window.location.href = `success.html?type=${botType}&order=${orderId}`;
             }, 2000);
         });
     </script>
