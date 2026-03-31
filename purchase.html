@@ -90,7 +90,7 @@
             
             if (confirm(`Purchase ${botType} bot for $${amount/100}/month?\n\nThis will take you to the activation page.`)) {
                 // Store selection in URL
-                window.location.href = `activate.html?type=${botType}&paid=true&amount=${amount}`;
+                window.location.href = `checkout.html?type=${botType}`;
             }
         }
         
