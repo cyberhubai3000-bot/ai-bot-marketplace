@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful | AI Bot Marketplace</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background: #0a0a0f; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .container { max-width: 600px; padding: 40px; }
+        .success-icon { font-size: 80px; margin-bottom: 30px; }
+        h1 { font-size: 36px; margin-bottom: 20px; color: #00d4ff; }
+        p { font-size: 18px; color: #888; margin-bottom: 20px; line-height: 1.6; }
+        .telegram-box { background: #12121a; border: 2px solid #0088cc; border-radius: 16px; padding: 30px; margin: 30px 0; }
+        .telegram-box h2 { color: #0088cc; margin-bottom: 15px; }
+        .telegram-box p { color: #ccc; margin-bottom: 10px; }
+        .telegram-btn { display: inline-block; padding: 16px 32px; background: #0088cc; color: white; text-decoration: none; border-radius: 8px; font-size: 18px; margin-top: 20px; }
+        .next-btn { display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #00d4ff, #a855f7); color: white; text-decoration: none; border-radius: 8px; font-size: 18px; margin-top: 20px; }
+        .order-info { background: #1a1a25; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .order-info p { color: #ccc; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>Payment Successful!</h1>
+        
+        <p>Thank you for your purchase. Your bot is almost ready!</p>
+        
+        <div class="order-info">
+            <p><strong>Order ID:</strong> <span id="order-id">Loading...</span></p>
+            <p><strong>Bot Type:</strong> <span id="bot-type">Loading...</span></p>
+        </div>
+        
+        <div class="telegram-box">
+            <div style="font-size: 48px; margin-bottom: 15px;">📱</div>
+            <h2>Check Your Telegram!</h2>
+            <p>We've sent you activation instructions via @Aispawn_bot</p>
+            <p><strong>Next steps:</strong></p>
+            <p>1. Open Telegram</p>
+            <p>2. Check messages from @Aispawn_bot</p>
+            <p>3. Follow the BotFather instructions</p>
+            <p>4. Send your token back to activate</p>
+            
+            <a href="https://t.me/Aispawn_bot" class="telegram-btn" target="_blank">Open Telegram →</a>
+        </div>
+        
+        <p>Haven't received the message? Click below to activate manually:</p>
+        
+        <a href="activate.html" id="activation-link" class="next-btn">Go to Activation Page →</a>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('order') || 'ORDER-' + Date.now();
+        const botType = urlParams.get('type') || 'support';
+        
+        // Update display
+        document.getElementById('order-id').textContent = orderId;
+        document.getElementById('bot-type').textContent = botType.charAt(0).toUpperCase() + botType.slice(1) + ' Bot';
+        
+        // Update activation link
+        document.getElementById('activation-link').href = `activate.html?type=${botType}&order=${orderId}&paid=true`;
+        
+        // Here you would typically trigger the Telegram notification
+        // Since this is static HTML, the notification needs to be sent from backend
+        console.log('Order completed:', { orderId, botType });
+    </script>
+</body>
+</html>
