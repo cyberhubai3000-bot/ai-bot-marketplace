@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Activation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background: #f8f9fa; padding: 40px 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #0088cc; text-align: center; margin-bottom: 30px; }
+        .step { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0088cc; }
+        h3 { color: #333; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 8px; line-height: 1.5; }
+        input { width: 100%; padding: 14px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-top: 10px; }
+        button { width: 100%; padding: 16px; background: #0088cc; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #006699; }
+        .result { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; }
+        .result.show { display: block; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        .admin-only { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        .admin-only h4 { color: #856404; margin-bottom: 10px; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 14px; margin-top: 10px; resize: vertical; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Bot Activation</h1>
+        
+        <div class="step">
+            <h3>✅ Step 1: Create Bot with @BotFather</h3>
+            <p>1. Open Telegram and search <strong>@BotFather</strong></p>
+            <p>2. Send: <code>/newbot</code></p>
+            <p>3. Enter your bot name</p>
+            <p>4. Enter username (must end in 'bot')</p>
+            <p>5. <strong>Copy the API token</strong> (looks like: 123456789:ABC...)</p>
+        </div>
+        
+        <div class="step">
+            <h3>✅ Step 2: Paste Token Below</h3>
+            <input type="text" id="token" placeholder="Paste your BotFather token here" autocomplete="off">
+            <input type="hidden" id="user_id" value="customer">
+        </div>
+        
+        <button onclick="submitActivation()">🚀 Submit Activation Request</button>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="admin-only">
+            <h4>🔐 Admin Copy/Paste Area</h4>
+            <p>Copy this and send to admin:</p>
+            <textarea id="admin-text" rows="4" readonly>BOT ACTIVATION REQUEST
+Token: [paste above]
+User: customer
+Time: [auto-filled]
+Status: PENDING</textarea>
+        </div>
+    </div>
+
+    <script>
+        function submitActivation() {
+            const token = document.getElementById('token').value.trim();
+            const result = document.getElementById('result');
+            const adminText = document.getElementById('admin-text');
+            
+            if (!token) {
+                result.className = 'result error show';
+                result.innerHTML = '❌ Please enter your token';
+                return;
+            }
+            
+            if (!token.match(/^\d+:[A-Za-z0-9_-]+$/)) {
+                result.className = 'result error show';
+                result.innerHTML = '❌ Invalid token format. Should be: 123456789:ABC...';
+                return;
+            }
+            
+            // Fill admin text
+            const time = new Date().toISOString();
+            adminText.value = `BOT ACTIVATION REQUEST
+Token: ${token}
+User: customer
+Time: ${time}
+Status: PENDING`;
+            
+            // Show success
+            result.className = 'result success show';
+            result.innerHTML = `
+                ✅ <strong>Request Submitted!</strong><br><br>
+                Your activation request has been received.\u003cbr><br>
+                <strong>Next Steps:</strong>\u003cbr>
+                1. Copy the text from the admin box below\u003cbr>
+                2. Send it to @CyberHub (admin)\u003cbr>
+                3. Your bot will be activated within 24 hours\u003cbr>\u003cbr>
+                <strong>Your Token:</strong> ${token.substring(0, 20)}...
+            `;
+            
+            // Log to console for debugging
+            console.log('ACTIVATION:', {token: token.substring(0, 15) + '...', time});
+        }
+    </script>
+</body>
+</html>
